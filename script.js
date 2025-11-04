@@ -4,6 +4,9 @@ const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
 const shotsElement = document.getElementById("shots");
 const statusElement = document.getElementById("status");
+const shotMeterElement = document.getElementById("shotMeter");
+const shotMeterFillElement = document.getElementById("shotMeterFill");
+const resetButton = document.getElementById("resetButton");
 
 const target = {
   x: canvas.width / 2,
@@ -14,8 +17,17 @@ const target = {
 };
 
 let score = 0;
-let shotsLeft = 10;
+const maxShots = 10;
+let shotsLeft = maxShots;
 let gameOver = false;
+
+function randomizeTargetVelocity() {
+  const horizontalSpeed = 3 + Math.random() * 2;
+  const verticalSpeed = 2 + Math.random() * 2;
+
+  target.vx = (Math.random() < 0.5 ? -1 : 1) * horizontalSpeed;
+  target.vy = (Math.random() < 0.5 ? -1 : 1) * verticalSpeed;
+}
 
 function drawTarget() {
   const bands = [
@@ -58,8 +70,16 @@ function render() {
 }
 
 function updateScoreboard() {
+  const safeShots = Math.max(shotsLeft, 0);
   scoreElement.textContent = `Score: ${score}`;
-  shotsElement.textContent = `Shots Remaining: ${shotsLeft}`;
+  shotsElement.textContent = `Shots Remaining: ${safeShots}`;
+  updateShotMeter(safeShots);
+}
+
+function updateShotMeter(safeShots) {
+  const percentage = (safeShots / maxShots) * 100;
+  shotMeterFillElement.style.width = `${percentage}%`;
+  shotMeterElement.setAttribute("aria-valuenow", `${safeShots}`);
 }
 
 function endGame() {
@@ -96,5 +116,27 @@ function handleShot(event) {
 
 canvas.addEventListener("click", handleShot);
 
+function resetGame() {
+  const wasGameOver = gameOver;
+
+  score = 0;
+  shotsLeft = maxShots;
+  gameOver = false;
+  target.x = canvas.width / 2;
+  target.y = canvas.height / 2;
+  randomizeTargetVelocity();
+
+  statusElement.textContent = `Click the moving target. You have ${maxShots} shots!`;
+  canvas.classList.remove("disabled");
+  updateScoreboard();
+
+  if (wasGameOver) {
+    render();
+  }
+}
+
+resetButton.addEventListener("click", resetGame);
+
+randomizeTargetVelocity();
 updateScoreboard();
 render();

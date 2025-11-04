@@ -12,9 +12,21 @@
       <section class="scoreboard">
         <div class="score" id="score">Score: 0</div>
         <div class="shots" id="shots">Shots Remaining: 10</div>
+        <div
+          class="shot-meter"
+          id="shotMeter"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="10"
+          aria-valuenow="10"
+          aria-label="Shots remaining"
+        >
+          <div class="shot-meter__fill" id="shotMeterFill"></div>
+        </div>
       </section>
       <canvas id="gameCanvas" width="800" height="500" aria-label="Shooter game canvas"></canvas>
       <p class="status" id="status">Click the moving target. You have 10 shots!</p>
+      <button id="resetButton" class="reset-button" type="button">Reset Game</button>
     </main>
     <script src="script.js"></script>
   </body>
