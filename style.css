@@ -54,7 +54,7 @@ h1 {
 .bullet {
   width: 0.75rem;
   height: 1.5rem;
-  background: linear-gradient(180deg, #facc15, #f97316);
+  background: linear-gradient(180deg, #e2e8f0, #94a3b8);
   border-radius: 0.375rem 0.375rem 0.5rem 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: opacity 0.3s ease, transform 0.3s ease;
