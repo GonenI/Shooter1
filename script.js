@@ -5,7 +5,6 @@ const scoreElement = document.getElementById("score");
 const shotsElement = document.getElementById("shots");
 const statusElement = document.getElementById("status");
 const shotMeterElement = document.getElementById("shotMeter");
-const shotMeterFillElement = document.getElementById("shotMeterFill");
 const resetButton = document.getElementById("resetButton");
 
 const target = {
@@ -20,6 +19,20 @@ let score = 0;
 const maxShots = 10;
 let shotsLeft = maxShots;
 let gameOver = false;
+let bulletElements = [];
+
+function createBullets() {
+  shotMeterElement.innerHTML = '';
+  bulletElements = [];
+  
+  for (let i = 0; i < maxShots; i++) {
+    const bullet = document.createElement('div');
+    bullet.className = 'bullet';
+    bullet.setAttribute('aria-hidden', 'true');
+    shotMeterElement.appendChild(bullet);
+    bulletElements.push(bullet);
+  }
+}
 
 function randomizeTargetVelocity() {
   const horizontalSpeed = 3 + Math.random() * 2;
@@ -77,9 +90,15 @@ function updateScoreboard() {
 }
 
 function updateShotMeter(safeShots) {
-  const percentage = (safeShots / maxShots) * 100;
-  shotMeterFillElement.style.width = `${percentage}%`;
-  shotMeterElement.setAttribute("aria-valuenow", `${safeShots}`);
+  // Mark bullets as shot from the end
+  for (let i = 0; i < bulletElements.length; i++) {
+    if (i < maxShots - safeShots) {
+      bulletElements[bulletElements.length - 1 - i].classList.add('shot');
+    } else {
+      bulletElements[bulletElements.length - 1 - i].classList.remove('shot');
+    }
+  }
+  shotMeterElement.setAttribute("aria-label", `${safeShots} shots remaining`);
 }
 
 function endGame() {
@@ -128,6 +147,7 @@ function resetGame() {
 
   statusElement.textContent = `Click the moving target. You have ${maxShots} shots!`;
   canvas.classList.remove("disabled");
+  createBullets();
   updateScoreboard();
 
   if (wasGameOver) {
@@ -138,5 +158,6 @@ function resetGame() {
 resetButton.addEventListener("click", resetGame);
 
 randomizeTargetVelocity();
+createBullets();
 updateScoreboard();
 render();
