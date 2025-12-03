@@ -10,7 +10,7 @@ const resetButton = document.getElementById("resetButton");
 const target = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  radius: 50,
+  radius: 70,
   vx: 3 + Math.random() * 2,
   vy: 2 + Math.random() * 2,
 };
